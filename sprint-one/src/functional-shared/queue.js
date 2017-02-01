@@ -1,7 +1,7 @@
 var extend = function (obj1, obj2) {
-   for (var key in obj2) {
-     obj1[key] = obj2[key];
-   }
+  for (var key in obj2) {
+    obj1[key] = obj2[key];
+  }
 };
 
 
@@ -30,7 +30,7 @@ queueMethods.enqueue = function (value) {
 };
 
 queueMethods.dequeue = function () {
-  if(this.length > 0) {
+  if (this.length > 0) {
     this.length--;
   }
   var dequeued = this.storage[this.firstIndex];
