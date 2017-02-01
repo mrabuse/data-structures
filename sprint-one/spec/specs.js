@@ -68,7 +68,6 @@ define([
         stack.push('b');
         expect(stack.pop()).to.equal('b');
       });
-
     });
 
     describe('stack-specific behavior', function() {
