@@ -7,49 +7,46 @@ var extend = function (obj1, obj2) {
 
 var Tree = function(value) {
   var newTree = {};
-  newTree.value = value;
   extend(newTree, treeMethods);
+  newTree.value = value;
   // your code here
   newTree.children = [];
-
   return newTree;
 };
 
 var treeMethods = {};
 
 treeMethods.addChild = function(value) {
-
-  if (this.value === undefined) {
-    this.value = value;
-  } else {
-    var treeChild = Tree(value);
-    this.children.push(treeChild);
-  }
+  var treeChild = Tree(value);
+  this.children.push(treeChild);
 };
 
 treeMethods.contains = function(target) {
   var hasTarget = false;
-  var tree = this;
-  console.log(this);
+  var firstTree = this;
 
-  var lol = function(tree) {
+  var searchTree = function(tree) {
     if (tree.value === target) {
       hasTarget = true;
     } else {
       if (tree.children.length > 0) {
         for (var i = 0; i < tree.children.length; i++) {
-          lol(tree.children[i]);
+          searchTree(tree.children[i]);
         }
       }
     }
-
-    lol(tree);
-    return hasTarget;
   };
+
+  searchTree(firstTree);
+
+  return hasTarget;
 };
 
 
 
 /*
  * Complexity: What is the time complexity of the above functions?
+
+ addChild:O(1);
+ contains:O(n);
  */
