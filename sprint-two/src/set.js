@@ -7,7 +7,11 @@ var Set = function() {
 var setPrototype = {};
 
 setPrototype.add = function(item) {
-  this._storage[item] = item;
+  if (this._storage[item] === undefined) {
+    this._storage[item] = 1;
+  } else {
+    this._storage[item]++;
+  }
 
 };
 
@@ -20,7 +24,11 @@ setPrototype.contains = function(item) {
 };
 
 setPrototype.remove = function(item) {
-  this._storage[item] = undefined;
+  if (this._storage[item] === 1) {
+    this._storage[item] = undefined;
+  } else {
+    this._storage[item]--;
+  }
 };
 
 /*
