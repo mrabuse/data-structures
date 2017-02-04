@@ -9,15 +9,29 @@ var Tree = function(value) {
   extend(newTree, treeMethods);
   newTree.value = value;
   // your code here
-  newTree.children = [];
+  newTree.children = {};
+  newTree.parent = {};
   return newTree;
 };
 
 var treeMethods = {};
 
 treeMethods.addChild = function(value) {
+  var parent = this;
+  var parentName = this.value;
   var treeChild = Tree(value);
-  this.children.push(treeChild);
+  var childValue = treeChild.value;
+
+  treeChild.parent[parentName] = parent;
+  parent.children[childValue] = treeChild;
+};
+
+
+treeMethods.removeFromParent = function(child) {
+  var parent = this;
+
+  child.parent = undefined;
+  parent.children[child] = undefined;
 };
 
 treeMethods.contains = function(target) {
@@ -28,9 +42,9 @@ treeMethods.contains = function(target) {
     if (tree.value === target) {
       hasTarget = true;
     } else {
-      if (tree.children.length > 0) {
-        for (var i = 0; i < tree.children.length; i++) {
-          searchTree(tree.children[i]);
+      for (var child in tree.children) {
+        if (tree.children.hasOwnProperty(child)) {
+          searchTree(tree.children[child]);
         }
       }
     }
@@ -42,11 +56,31 @@ treeMethods.contains = function(target) {
 };
 
 
+treeMethods.traverse = function(cb) {
+  var tree = this;
+
+  var findValues = function(tree) {
+    if (tree.value) {
+      cb(tree.value);
+    }
+
+    for (var key in tree.children) {
+      if (tree.children.hasOwnProperty(key)) {
+        findValues(tree.children[key]);
+      }
+    }
+  };
+
+  findValues(tree);
+};
+
 
 /*
  * Complexity: What is the time complexity of the above functions?
  extend: O(n);
  Tree: O(1); (since inserted value doesn't change the runtime complexity)
  addChild:O(1);
+ removeFromParent: O(1);
  contains:O(n);
+ traverse: O(n);
  */
