@@ -34,7 +34,7 @@ describe('set', function() {
     set.add('Meryl Streep');
     set.add('Meryl Streep');
     set.remove('Meryl Streep');
-    expect (set._storage['Meryl Streep']).to.equal(1);
+    expect(set._storage['Meryl Streep']).to.equal(1);
   });
 
   it('should remove a value when the number of its instances becomes zero', function () {
@@ -43,4 +43,24 @@ describe('set', function() {
     set.remove('Fozzie Bear');
     expect(set.contains('Fozzie Bear')).to.equal(false);
   });
+
+  it('should handle numbers, booleans, objects, and arrays', function () {
+    set.add(5);
+    expect(set.contains(5)).to.equal(true);
+    set.remove(5);
+    expect(set.contains(5)).to.equal(false);
+    set.add(true);
+    expect(set.contains(true)).to.equal(true);
+    set.remove(true);
+    expect(set.contains(true)).to.equal(false);
+    set.add({cat: 'hat'});
+    expect(set.contains({cat: 'hat'})).to.equal(true);
+    set.remove({cat: 'hat'});
+    expect(set.contains({cat: 'hat'})).to.equal(false);
+    set.add([1, 2, 3]);
+    expect(set.contains([1, 2, 3])).to.equal(true);
+    set.remove([1, 2, 3]);
+    expect(set.contains([1, 2, 3])).to.equal(false);
+  });
+
 });
