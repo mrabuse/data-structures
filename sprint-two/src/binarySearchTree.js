@@ -58,34 +58,27 @@ BinarySearchTree.prototype.contains = function(value) {
 
 BinarySearchTree.prototype.depthFirstLog = function(cb) {
   var tree = this;
-  var previousTree;
-  var leftNodes = [];
-  var rightNodes = [];
-  var level = 0;
 
   var eachOne = function (tree) {
-    if (tree.left !== undefined) {
-      if (tree.left.looked === undefined) {
-        leftNodes[level].push({previousLevel: tree, looked: true});
-        cb(tree.left.value);
-        eachOne(tree.left);
-      } else {
-        if (tree.right !== undefined) {
-          if (tree.right.looked === undefined) {
-            rightNodes[level].push({previousLevel: tree, looked: true});
-          }
-        } else if (tree.right === undefined) {
-          eachOne(tree.previousLevel);
-        }
-      }
+
+    cb(tree.value);
+
+    if (tree.left) {
+      eachOne(tree.left);
+    }
+
+    if (tree.right) {
+      eachOne(tree.right);
     }
   };
 
-  cb(tree.value);
   return eachOne(tree);
 };
 
 
 /*
  * Complexity: What is the time complexity of the above functions?
+ insert: O(log^n)
+ contains: O(log^n)
+ depthFirstLog: O(n)
  */
