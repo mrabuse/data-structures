@@ -4,7 +4,6 @@ var extend = function (obj1, obj2) {
   }
 };
 
-
 var Tree = function(value) {
   var newTree = {};
   extend(newTree, treeMethods);
@@ -46,7 +45,8 @@ treeMethods.contains = function(target) {
 
 /*
  * Complexity: What is the time complexity of the above functions?
-
+ extend: O(n);
+ Tree: O(1); (since inserted value doesn't change the runtime complexity)
  addChild:O(1);
  contains:O(n);
  */
