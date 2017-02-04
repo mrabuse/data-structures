@@ -10,10 +10,35 @@ var HashTable = function() {
 //array[2] = array link to key:value pairs w/ matching hash
 
 HashTable.prototype.insert = function(k, v) {
-  this.pairCount++;
-  if (this._limit * .75 <= this.pairCount) {
-    this._limit = this._limit * 2;
+  var hashTable = this;
 
+  this.pairCount++;
+
+  if (this._limit * .75 < this.pairCount) {
+    var oldStorage = this._storage;
+    this._limit = this._limit * 2;
+    this._storage = LimitedArray(this._limit);
+    var newStorage = this._storage;
+    index = getIndexBelowMaxForKey(k, this._limit);
+
+
+    for (var bucket = 0; bucket < oldStorage.length; bucket++) {
+      var bucket = oldStorage[bucket];
+      if (bucket) {
+        var searchBucket = function(node) {
+          if (node[0]) {
+            var index = getIndexBelowMaxForKey(node[0], this._limit);
+            newStorage.set(index, [node[0], node[1], []]);
+          }
+
+          if (node[2]) {
+            searchBucket(node[2]);
+          }
+        };
+
+        searchBucket(bucket);
+      }
+    }
   }
 
   var index = getIndexBelowMaxForKey(k, this._limit);
@@ -64,12 +89,37 @@ HashTable.prototype.retrieve = function(k) {
 HashTable.prototype.remove = function(k) {
   this.pairCount--;
 
-  if (this._limit * .25 >= this.pairCount) {
-    this._limit = this._limit * 2;
+  if (this._limit * .25 > this.pairCount) {
+    var oldStorage = this._storage;
+    this._limit = this._limit / 2;
+    this._storage = LimitedArray(this._limit);
+    var newStorage = this._storage;
+    index = getIndexBelowMaxForKey(k, this._limit);
+
+
+    for (var bucket = 0; bucket < oldStorage.length; bucket++) {
+      var bucket = oldStorage[bucket];
+      if (bucket) {
+        var searchBucket = function(node) {
+          if (node[0]) {
+            var index = getIndexBelowMaxForKey(node[0], this._limit);
+            newStorage.set(index, [node[0], node[1], []]);
+          }
+
+          if (node[2]) {
+            searchBucket(node[2]);
+          }
+        };
+
+        searchBucket(bucket);
+      }
+    }
   }
+
 
   var index = getIndexBelowMaxForKey(k, this._limit);
   var storedValues = this._storage.set(index, undefined);
+
 
   var annihilateK = function (array) {
     if (array[0] === k) {
