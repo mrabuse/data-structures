@@ -13,11 +13,10 @@ HashTable.prototype.insert = function(k, v) {
   this.pairCount++;
   if (this._limit * .75 <= this.pairCount) {
     this._limit = this._limit * 2;
+
   }
 
   var index = getIndexBelowMaxForKey(k, this._limit);
-  console.log("# of values", this.pairCount);
-  console.log("Limit being used", this._limit);
   var storedArray = this._storage.get(index);
 
   var findEmptySpot = function (array) {
