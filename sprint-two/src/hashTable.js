@@ -9,29 +9,25 @@ var HashTable = function() {
 //Value tuple: array[0] = key, array[1] = value,
 //array[2] = array link to key:value pairs w/ matching hash
 
-HashTable.prototype.insert = function(k, v) {
-  var hashTable = this;
-
-  this.pairCount++;
-
-  if (this._limit * .75 < this.pairCount) {
+HashTable.prototype.resize = function(limit) {
     var oldStorage = this._storage;
-    this._limit = this._limit * 2;
     this._storage = LimitedArray(this._limit);
     var newStorage = this._storage;
+    this.pairCount = 0;
+
     index = getIndexBelowMaxForKey(k, this._limit);
 
+    for (var i = 0; i < oldStorage.storage.length; i++) {
+      var bucket = oldStorage.storage[i];
+      if (bucket.length > 0) {
 
-    for (var bucket = 0; bucket < oldStorage.length; bucket++) {
-      var bucket = oldStorage[bucket];
-      if (bucket) {
         var searchBucket = function(node) {
-          if (node[0]) {
+          if (node[0] !== undefined) {
             var index = getIndexBelowMaxForKey(node[0], this._limit);
-            newStorage.set(index, [node[0], node[1], []]);
+            newStorage.insert([node[0], node[1]]);
           }
 
-          if (node[2]) {
+          if (node[2].length > 0) {
             searchBucket(node[2]);
           }
         };
@@ -39,6 +35,16 @@ HashTable.prototype.insert = function(k, v) {
         searchBucket(bucket);
       }
     }
+  } 
+};
+
+HashTable.prototype.insert = function(k, v) {
+
+  this.pairCount++;
+
+  if (this._limit * .75 < this.pairCount) {
+    this._limit = this._limit * 2;
+    resize(this._limit);
   }
 
   var index = getIndexBelowMaxForKey(k, this._limit);
